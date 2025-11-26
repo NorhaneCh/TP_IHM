@@ -1,7 +1,6 @@
 import { test } from '@playwright/test';
 import * as Todo from './modelsTodo';
 
-test.describe('Filtres Tous / Actifs / Complétés', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('https://alexdmr.github.io/l3m-2023-2024-angular-todolist/');
@@ -52,5 +51,3 @@ test.describe('Filtres Tous / Actifs / Complétés', () => {
     await Todo.verifCompteur(page, 2);
     await Todo.verifFiltreSelectionne(page, 'all');
   });
-
-});
