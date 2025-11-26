@@ -5,6 +5,8 @@
 - **Norhane CHERIF**
 - **Lina GANA**
 
+LE MODELE DE TACHE EST DANS LE DOSSIER 'Modele_de_tache'
+
 ## 1. ✔️ Tests : Ajout et affichage des tâches
 
 - Saisir une tâche dans le champ d’entrée puis valider (Enter ou bouton) ajoute correctement une nouvelle tâche en bas de la liste.
