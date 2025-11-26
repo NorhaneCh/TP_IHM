@@ -7,7 +7,6 @@ async function envoyerRaccourci(page: Page, key: string) {
   await page.keyboard.up('Control');
 }
 
-test.describe('Étape bonus : raccourcis CTRL+Z / CTRL+Y', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.goto('https://alexdmr.github.io/l3m-2023-2024-angular-todolist/');
@@ -80,6 +79,4 @@ test('CTRL+Z / CTRL+Y ne font rien si aucune action possible', async ({ page }) 
 
   // Vérifier qu’aucune erreur JS n’est apparue
   expect(consoleErrors.length).toBe(0);
-});
-
 });
