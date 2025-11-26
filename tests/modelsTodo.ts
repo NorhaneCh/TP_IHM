@@ -1,15 +1,10 @@
 import { Page, expect } from "@playwright/test";
-
-// --- Types et Modèle ---
-
 export interface TaskItem {
   done: boolean;
   label: string;
 }
 
 export type TaskList = TaskItem[];
-
-// --- Lecture de l'UI ---
 
 export async function lireListeVisible(page: Page): Promise<TaskList> {
   const lignes = page.locator(".todoapp .todo-list > li");
@@ -18,12 +13,8 @@ export async function lireListeVisible(page: Page): Promise<TaskList> {
 
   for (let i = 0; i < nbLignes; i++) {
     const ligne = lignes.nth(i);
-
-    // Récupérer le texte affiché de la tâche
     const labelEl = ligne.locator("label.texte");
     const texte = (await labelEl.textContent())?.trim() ?? "";
-
-    // Récupérer l’état coché
     const coche = await ligne
       .locator("input.toggle[type=checkbox]")
       .isChecked();
@@ -33,8 +24,6 @@ export async function lireListeVisible(page: Page): Promise<TaskList> {
 
   return resultat;
 }
-
-// --- Vérifications ---
 
 export async function verifListeVide(page: Page): Promise<void> {
   const liste = await lireListeVisible(page);
@@ -49,7 +38,6 @@ export async function verifListeEgaleA(
   expect(liste).toEqual(attendu);
 }
 
-// Vérifie qu’un item est présent dans la liste
 export async function verifItemPresent(
   page: Page,
   label: string
@@ -58,7 +46,6 @@ export async function verifItemPresent(
   expect(liste.some((item) => item.label === label)).toBe(true);
 }
 
-// Vérifie qu’un item n’est pas présent dans la liste
 export async function verifItemAbsent(
   page: Page,
   label: string
@@ -67,7 +54,6 @@ export async function verifItemAbsent(
   expect(liste.every((item) => item.label !== label)).toBe(true);
 }
 
-// Vérifie si un item est coché ou non
 export async function verifItemCoche(
   page: Page,
   label: string,
@@ -79,7 +65,6 @@ export async function verifItemCoche(
   expect(item!.done).toBe(attendu);
 }
 
-// Vérifie si tous les items sont cochés ou décochés
 export async function verifTousCoches(
   page: Page,
   tousCoches: boolean
@@ -90,7 +75,6 @@ export async function verifTousCoches(
   }
 }
 
-// --- Vérification des filtres ---
 export async function verifFiltreSelectionne(
   page: Page,
   filtre: "all" | "active" | "completed"
@@ -103,40 +87,26 @@ export async function verifFiltreSelectionne(
     await expect(page.locator(".filterCompleted")).toHaveClass(/selected/);
 }
 
-// --- Vérification du compteur d'items restants ---
-// export async function verifCompteur(
-//   page: Page,
-//   attendu: number
-// ): Promise<void> {
-//   await expect(page.locator(".todo-count strong")).toHaveText(
-//     attendu.toString()
-//   );
-// }
 export async function verifCompteur(
   page: Page,
   attendu: number
 ): Promise<void> {
   const footer = page.locator(".todo-count");
 
-  // Si le footer n'existe pas, considérer que le compteur est 0
   if ((await footer.count()) === 0) {
-    // Si on attend 0 → OK
     if (attendu === 0) return;
-    // Si on attend > 0 → le footer n'existe pas donc compteur = 0
+
     await expect(attendu).toBe(0);
     return;
   }
 
-  // Footer présent : lire le texte et extraire un nombre
   const texte = (await footer.textContent())?.trim() ?? "";
   const match = texte.match(/\d+/);
   const valeur = match ? parseInt(match[0], 10) : 0;
 
-  // Vérifier que la valeur correspond à l'attendu
   await expect(valeur).toBe(attendu);
 }
 
-// --- Vérification des boutons ---
 export async function verifBoutonSupprimerCocheesVisible(
   page: Page,
   visible: boolean
@@ -172,8 +142,6 @@ export async function verifRedoDisabled(
     await expect(btn).toBeEnabled();
   }
 }
-
-// --- Actions sur la liste ---
 
 export async function actionAjouterTache(
   page: Page,
@@ -237,8 +205,6 @@ export async function verifierAnnulerDesactive(page: Page): Promise<void> {
 export async function verifierRefaireDesactive(page: Page): Promise<void> {
   await expect(page.getByRole("button", { name: "Refaire" })).toBeDisabled();
 }
-
-// --- Comparaison entre Étape 1 et Étape 2 (pour vérifier cohérence) ---
 
 export async function comparerListeAvecEtape2(page: Page): Promise<void> {
   const etape2List = page
